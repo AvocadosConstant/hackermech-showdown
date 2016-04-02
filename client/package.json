@@ -22,5 +22,9 @@
     "Nik Vanderhoof <nvander1@binghamton.edu>",
     "Austin Ward <award9@binghamton.edu>",
     "Alan Plotko <aplotko1@binghamton.edu>"
-  ]
+  ],
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "term.js": "0.0.7"
+  }
 }
