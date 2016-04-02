@@ -1,8 +1,8 @@
 var defaults = {
-  "torso": 250,
-  "arm": 100,
-  "leg": 100,
-  "power": 100,
+  'torso': 250,
+  'arm': 100,
+  'leg': 100,
+  'power': 100
 };
 
 /**
@@ -21,10 +21,11 @@ function BodyPart(type) {
  * @param {string} playerId - A unique identifier.
  */
 function Player(playerId) {
+  this.playerId = playerId;
   this.power = defaults.power;
-  this.torso = new BodyPart("torso");
-  this.leftArm = new BodyPart("arm");
-  this.rightArm = new BodyPart("arm");
-  this.leftLeg = new BodyPart("leg");
-  this.rightLeg = new BodyPart("leg");
+  this.torso = new BodyPart('torso');
+  this.leftArm = new BodyPart('arm');
+  this.rightArm = new BodyPart('arm');
+  this.leftLeg = new BodyPart('leg');
+  this.rightLeg = new BodyPart('leg');
 }
