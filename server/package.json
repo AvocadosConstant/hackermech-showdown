@@ -4,6 +4,7 @@
   "description": "Mech coding fights",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,12 +16,15 @@
     "url": "https://github.com/AvocadosConstant/hackny-spring-2016/issues"
   },
   "homepage": "https://github.com/AvocadosConstant/hackny-spring-2016#readme",
-  "authors": {
+  "authors": [
     "Tim Hung <thung1@binghamton.edu>",
     "Will Jagels <william@jagels.us>",
     "Taylor Foxhall <tfoxhal1@binghamton.edu>",
     "Nik Vanderhoof <nvander1@binghamton.edu>",
     "Austin Ward <award9@binghamton.edu>",
     "Alan Plotko <aplotko1@binghamton.edu>"
+  ],
+  "dependencies": {
+    "express": "^4.13.4"
   }
 }
