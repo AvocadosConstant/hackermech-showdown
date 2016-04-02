@@ -1,10 +1,19 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+var debug = require('debug')('gpgchat-server:server');
+var morgan = require('morgan');
+
+var api = require('./routes/index');
+
 var app = express();
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
-});
+app.use(morgan('dev'));
+
+app.use('/api', api);
+
+app.listen(process.env.PORT || 3000);
