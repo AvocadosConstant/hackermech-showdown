@@ -3,7 +3,7 @@ var defaults = {
   "arm": 100,
   "leg": 100,
   "power": 100,
-}
+};
 
 /**
  * Initializes body part of a given type on the mech.
