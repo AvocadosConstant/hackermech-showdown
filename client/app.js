@@ -127,13 +127,15 @@ var partPanel = blessed.box({
     }
 });
 
-var partPic = blessed.box({
-    left: 0,
-    top: 0,
-    height: '40%',
+var partPic = blessed.ANSIImage({
+    // Halfway to the right minus half the image's width
+    left: '50%-14',
+    top: 1,
+    scale: 1,
     width: '100%',
-    //file: 'res/rocket-punch.jpg',
-    content: 'Part image goes here',
+    height: '40%',
+    file: 'res/images/shroom.png',
+    //content: 'Part image goes here',
     style: {
         fg: 'default',
         bg: 'black',
