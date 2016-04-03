@@ -55,8 +55,6 @@ class Player {
     this.leftLeg = new BodyPart('leg');
     this.rightLeg = new BodyPart('leg');
     this.power = defaults.power;
-    this.equipped = 0;
-    this.equipMax = 3;
   }
 
   equip(item, bodyPart) {
