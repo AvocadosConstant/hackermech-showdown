@@ -58,12 +58,20 @@ class Player {
     this.defense = false;
     this.onAttack = false;
     this.turnDamage = {
-      'Left-arm': 0,
-      'Right-arm': 0,
-      'Chest': 0,
-      'Left-leg': 0,
-      'Right-leg': 0
+      'leftArm': 0,
+      'rightArm': 0,
+      'chest': 0,
+      'leftLeg': 0,
+      'rightLeg': 0
     };
+  }
+
+  resetTurnDamage() {
+    this.turnDamage.leftArm = 0;
+    this.turnDamage.rightArm = 0;
+    this.turnDamage.chest = 0;
+    this.turnDamage.leftLeg = 0;
+    this.turnDamage.rightLeg = 0;
   }
 
   equip(item, bodyPart) {
@@ -79,11 +87,11 @@ class Player {
   attack(weapon,target=null){
     this.onAttack = true;
     var damage = {
-      'Left-arm': 0,
-      'Right-arm': 0,
-      'Chest': 0,
-      'Left-leg': 0,
-      'Right-leg': 0
+      'leftArm': 0,
+      'rightArm': 0,
+      'chest': 0,
+      'leftLeg': 0,
+      'rightLeg': 0
     };
     if(weapon==this.rightArm.item.itemID){
       if(this.power>this.rightArm.item.cost){
