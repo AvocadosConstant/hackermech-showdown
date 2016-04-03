@@ -11,15 +11,14 @@ screen = blessed.screen({
     ignoreDockContrast: true
 });
 
-var timer = blessed.bigtext({
+var timer = blessed.box({
     align: 'center',
     valign: 'middle',
-    font: 'fonts/ter-u32n.json',
-    fontBold: 'fonts/ter-u32b.json',
     left: 0,
     top: 0,
     width: '30%',
     height: '30%',
+    label: ' Time Remaining ',
     content: '10:00',
     border: 'line',
     style: {
@@ -92,13 +91,15 @@ var partPanel = blessed.box({
     }
 });
 
-var partPic = blessed.box({
-    left: 0,
-    top: 0,
-    height: '30%',
-    width: '50%',
-    //file: 'res/rocket-punch.jpg',
-    content: 'Part image goes here',
+var partPic = blessed.ANSIImage({
+    // Halfway to the right minus half the image's width
+    left: '50%-14',
+    top: 1,
+    scale: 1,
+    width: 25,
+    height: 10,
+    file: 'res/images/shroom.png',
+    //content: 'Part image goes here',
     style: {
         fg: 'default',
         bg: 'black',
