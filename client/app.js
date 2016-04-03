@@ -1,3 +1,6 @@
+var fs = require('fs');
+var partsJSON = JSON.parse(fs.readFileSync('res/sample-parts.json', 'utf8'));
+
 process.title = 'multiplex.js';
 
 var blessed = require('blessed')
@@ -51,6 +54,7 @@ var info = blessed.box({
 });
 
 var partsList = blessed.list({
+    items: Object.keys(partsJSON),
     left: '0%-1',
     top: '0%-1',
     width: '40%',
@@ -110,7 +114,9 @@ var partPic = blessed.box({
     }
 });
 
-var partTitle = blessed.box({
+var partTitle = blessed.text({
+    align: 'center',
+    valign: 'middle',
     left: '50%-1',
     top: '0',
     height: '30%',
@@ -119,6 +125,7 @@ var partTitle = blessed.box({
     style: {
         fg: 'default',
         bg: 'default',
+        bold: true,
         focus: {
             border: {
                 fg: 'green'
@@ -127,11 +134,13 @@ var partTitle = blessed.box({
     }
 });
 
-var partDesc = blessed.box({
+var partDesc = blessed.text({
     left: 0,
     top: '30%-1',
     height: '70%-1',
     width: '100%',
+    padding: 1,
+    tags: true,
     content: 'Part description',
     style: {
         fg: 'default',
@@ -144,10 +153,6 @@ var partDesc = blessed.box({
     }
 });
 
-//placeholder parts generator
-for(i = 1; i <= 15; i++) {
-    partsList.addItem('Part ' + i);
-}
 
 partPanel.append(partPic);
 partPanel.append(partTitle);
@@ -210,6 +215,17 @@ var interval = setInterval(function() {
 }, 1000);
 
 cmd.focus();
+
+partsList.on('select', function(el, selected) {
+    var name = el.getText();
+    var part = partsJSON[name];
+    partTitle.setContent(name);
+    partDesc.setContent(
+        '{bold}COST{/bold} ' + part.cost + '\n\n' +
+        '{bold}EFFECT{/bold} ' + part.effect + '\n\n' +
+        part.flavor
+    );
+});
 
 screen.key('C-q', function() {
     cmd.kill();

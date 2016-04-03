@@ -1,16 +1,13 @@
 {
-    "parts": [
-    {
-        "name": "SHOTGUN",
+    "SCATTERGUN" : {
             "cost": "30 pwr",
             "effect": "Fires 10 bullets for 5 damage each that randomly strike enemy parts. Each bullet has a 10% chance to miss.",
             "flavor": "Alright you Primitive Screwheads, listen up! You see this? This... is my boomstick!"
     },
-    {
-        "name": "ROCKET PUNCH",
+
+    "ROCKET PUNCH": {
         "cost": "80 pwr",
         "effect": "Punches a specified enemy part for (40-80) damage. Your equipped part takes half the damage you deal.",
         "flavor": "Mechs are equipped with powerful artillery capable of wiping out entire cities. Who cares, let's punch them in the face instead. Rockets included!"
     }
-    ]
 }
