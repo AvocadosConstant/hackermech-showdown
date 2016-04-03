@@ -27,6 +27,8 @@ var getItems = function (round) {
   for(var i = 0; i<3;i++){
     delete items[Math.round(Math.random()*(5-i))];
   }
+  console.log(items[0].itemId);
+  console.log(items);
 };
 
 exports.setup = function() {
@@ -59,3 +61,5 @@ exports.run = function() {
   games.findOne({'type': 'results'}, callback);
 
 };
+
+getItems();
