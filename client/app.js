@@ -11,9 +11,11 @@ screen = blessed.screen({
     ignoreDockContrast: true
 });
 
-var timer = blessed.box({
+var timer = blessed.bigtext({
     align: 'center',
     valign: 'middle',
+    font: 'fonts/ter-u32n.json',
+    fontBold: 'fonts/ter-u32b.json',
     left: 0,
     top: 0,
     width: '30%',
@@ -73,7 +75,7 @@ var partsList = blessed.list({
     }
 });
 
-var description = blessed.box({
+var partPanel = blessed.box({
     left: '40%-2',
     top: '0%-1',
     width: '60%+2',
@@ -90,14 +92,68 @@ var description = blessed.box({
     }
 });
 
-partsList.addItem('item 1');
-partsList.addItem('item 2');
-partsList.addItem('item 3');
+var partPic = blessed.box({
+    left: 0,
+    top: 0,
+    height: '30%',
+    width: '50%',
+    //file: 'res/rocket-punch.jpg',
+    content: 'Part image goes here',
+    style: {
+        fg: 'default',
+        bg: 'black',
+        focus: {
+            border: {
+                fg: 'green'
+            }
+        }
+    }
+});
 
+var partTitle = blessed.box({
+    left: '50%-1',
+    top: '0',
+    height: '30%',
+    width: '50%+1',
+    content: 'Part Title!',
+    style: {
+        fg: 'default',
+        bg: 'default',
+        focus: {
+            border: {
+                fg: 'green'
+            }
+        }
+    }
+});
 
+var partDesc = blessed.box({
+    left: 0,
+    top: '30%-1',
+    height: '70%-1',
+    width: '100%',
+    content: 'Part description',
+    style: {
+        fg: 'default',
+        bg: 'default',
+        focus: {
+            border: {
+                fg: 'green'
+            }
+        }
+    }
+});
 
+//placeholder parts generator
+for(i = 1; i <= 15; i++) {
+    partsList.addItem('Part ' + i);
+}
+
+partPanel.append(partPic);
+partPanel.append(partTitle);
+partPanel.append(partDesc);
 info.append(partsList);
-info.append(description);
+info.append(partPanel);
 screen.append(timer);
 screen.append(info);
 
@@ -155,14 +211,14 @@ var interval = setInterval(function() {
 
 cmd.focus();
 
-screen.key('C-b', function() {
-    timer.setContent('alan plotko');
-    screen.render();
-});
-
 screen.key('C-q', function() {
     cmd.kill();
-    return screen.destroy();
+    return process.exit(0);
+});
+
+screen.program.key('S-tab', function() {
+    screen.focusNext();
+    screen.render();
 });
 
 screen.render();
