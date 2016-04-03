@@ -143,7 +143,7 @@ var helpRoot = blessed.box({
     height: '100%',
     border: 'line',
     content: 
-        'Welcome to <NAME_OF_GAME>! \n\nThe object of the game is to DESTROY THE ENEMY MECH!\n\nHow do you do so? Well it\'s simple: You write code to program your mech to fight! \n\nAt the beginning of each round, <number> of mech parts are randomly chosen and provided to both players. Each player has ten minutes to write the AI that powers your mech. When time is over, your code is uploaded to the server and run against each other. '
+        'Welcome to <NAME_OF_GAME>! \n\nThe object of the game is to DESTROY THE ENEMY MECH!\n\nHow do you do so? Well it\'s simple: You write code to program your mech to fight! \n\nAt the beginning of each round, <number> of mech parts are randomly chosen and provided to both players. Each player has ten minutes to write the AI that powers your mech. When time is over, your code is uploaded to the server and run against each other. \n\n<Ctrl-q> to quit'
         ,
     padding: 1,
     style: {
@@ -164,7 +164,7 @@ var creditsRoot = blessed.box({
     height: '100%',
     border: 'line',
     padding: 1,
-    content: 'Made by so and so et al.',
+    content: 'Built by Tim Hung, William Jagels, Andrew Chellis, Nik Vanderhoof, Taylor Foxhall, Alan Plotko, and Austin Ward.',
     style: {
         fg: 'default',
         bg: 'default',
@@ -183,27 +183,31 @@ var submitRoot = blessed.box({
     width: '100%',
     height: '100% - 1',
     border: 'line',
-    padding: 1,
+    tags: true,
+});
+
+var submitInfo = blessed.box({
+    top: '0%',
+    left: '0%',
+    width: '100%',
+    height: 1,
+    align: 'center',
+    align: 'middle',
     tags: true,
     content: '{bold}Select your file for upload. Good luck!{/bold}',
     style: {
         fg: 'default',
         bg: 'default',
-        focus: {
-            border: {
-                fg: 'green'
-            }
-        }
     }
 });
 
 var submitDir = blessed.filemanager({
     cwd: true,
     scrollable: true,
-    top: '0%+2',
+    top: 1,
     left: '0%-1',
     width: '100%',
-    height: '100% - 10',
+    height: '100% - 4',
     keys: true, 
     vi: true,
     mouse: true,
@@ -229,6 +233,7 @@ submitDir.refresh('/~', function(file){
 });
 
 submitDir.on('file', function(el, selected){
+    elapse = 0;
     console.log(el);
     fs.readFile(el, 'utf-8', function(err, data) {
         var options = { method: 'POST',
@@ -250,6 +255,7 @@ submitDir.on('file', function(el, selected){
 });
 
 submitRoot.append(submitDir);
+submitRoot.append(submitInfo);
 
 
 
@@ -432,7 +438,7 @@ function init() {
     }
     request(options, function (error, response, body) {
         if (error) throw new Error(error);
-        corpus = body;
+        corpus = JSON.parse(body);
 
         var joinInterval = setInterval(function() {
             var options = { 
@@ -440,7 +446,9 @@ function init() {
                 url: 'http://localhost:3000/api/join'
             }
             request(options, function(error, response, body) {
-                if(body.status) {
+                body = JSON.parse(body);
+                console.log(body["status"]);
+                if(body["status"]) {
                     clearInterval(joinInterval);
                     startGame(); 
                 }
@@ -487,5 +495,3 @@ menuBar.on('click', function(data) {
 partsList.on('click', function(data) {
     partsList.focus();
 });
-
-
