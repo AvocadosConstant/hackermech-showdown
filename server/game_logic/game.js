@@ -101,7 +101,11 @@ exports.run = function(cb) {
     else {
       result.push('It\'s a draw');
     }
-    cb(null, result);
+    games.deleteMany({'type': 'results'}, function() {
+      games.insertOne({'type': 'results', 'result': result[0]}, function() {
+        cb(null, result);
+      });
+    });
 
   }
 
