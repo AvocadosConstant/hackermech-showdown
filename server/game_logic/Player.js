@@ -1,4 +1,6 @@
 'use strict';
+var itemList = require('./itemList.js');
+var debug = require('debug')('mech-fight-server:Player.js');
 
 /** Default values. */
 var defaults = {
@@ -28,15 +30,16 @@ class BodyPart {
    * @return {boolean} - Success of equipping item.
    */
   equip(item) {
-    var equipSuccess = true;
-    if(item.inUse || item.limb != this.limbType) {
-      equipSuccess = false;
+    if(item.inUse || item.limb !== this.limbType) {
+      console.log("In use: " + item.inUse);
+      console.log("Limb type: " + item.limb + " / " + this.limbType);
+      return false;
     }
     else {
       this.item = item;
       item.inUse = true;
     }
-    return equipSuccess;
+    return true;
   }
 }
 
@@ -75,15 +78,27 @@ class Player {
     this.turnDamage.rightLeg = 0;
   }
 
+  isAlive() {
+    return this.torso.health > 0;
+  }
+
   equip(item, bodyPart) {
-    var equipSuccess = true;
-    if (this.equipped >= this.equipMax) {
-      equipSuccess = false;
+    var items = itemList();
+    for (var i = 0; i < items.length; i++) {
+      debug('Trying ' + items[i].itemId);
+      if (items[i].itemId === item) {
+        return this[bodyPart].equip(items[i]);
+      }
     }
-    else {
-      equipSuccess = bodyPart.equip(item);
-    }
-    return equipSuccess;
+    debug('Item part not found');
+    //if (this.equipped >= this.equipMax) {
+      //equipSuccess = false;
+    //}
+    //else {
+      //equipSuccess = bodyPart.equip(item);
+    //}
+    //return equipSuccess;
+    return false;
   }
   attack(weapon,target){
     this.onAttack = true;
@@ -94,10 +109,10 @@ class Player {
       'leftLeg': 0,
       'rightLeg': 0
     };
-    if(weapon==this.rightArm.item.itemID){
+    if(this.rightArm.item && weapon===this.rightArm.item.itemId){
       if(this.power>this.rightArm.item.cost){
         this.power-=this.rightArm.item.cost;
-        if(target!=null){
+        if(target!==null){
           damage = this.rightArm.item.action(target);
         }
         else{
@@ -105,10 +120,10 @@ class Player {
         }
       }
     }
-    else if(weapon==this.leftArm.item.itemID){
+    else if(this.leftArm.item && weapon===this.leftArm.item.itemId){
       if(this.power>this.leftArm.item.cost){
         this.power-=this.leftArm.item.cost;
-        if(target!=null){
+        if(target!==null){
           damage = this.leftArm.item.action(target);
         }
         else{
