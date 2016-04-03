@@ -8,6 +8,7 @@
 * @param {boolean} pLeg - if the tool can be equipped on the leg
 * @param {number} cooldown - Turns that must be waited before reuse
 */
+
 class Part {
   constructor(partID,cost,chest,arm,leg,cooldown){
     this.partID = name;
@@ -32,8 +33,6 @@ class DefensivePart extends Part {
     super(partID,cost,chest,arm,leg,cooldown);
     this.utility = utility;
   }
-
-}
 
 /**
 * Returns our set of possible parts.
