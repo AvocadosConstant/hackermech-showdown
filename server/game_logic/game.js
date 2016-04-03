@@ -1,8 +1,9 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var jailed = require('jailed');
-var mech = require('Player.js');
-var itemList = require('itemList.js');
+var player = require('./Player.js');
+var itemList = require('./itemList.js');
+var debug = require('debug')('mech-fight-server:gamejs');
 
 var db;
 var games;
@@ -24,21 +25,17 @@ MongoClient.connect(db_url, (err, database) => {
 
 var getItems = function (round) {
   var items = itemList();
-  for(int i = 0; i<3;i++){
-    delete items[Math.round(Math.random()*(5-i))];
+  for (var i = 0; i < 3; i++) {
+    items.splice(Math.round(Math.random() * (4-i)), 1);
   }
 };
 
 exports.setup = function() {
   var state = {
     'round': 0,
-    'items': ['item1', 'item2', 'item3'],
-    'player1': {
-      'wins': 0
-    },
-    'player2': {
-      'wins': 0
-    }
+    'items': getItems(),
+    'history': [],
+    'wins': {'player1': 0, 'player2': 0}
   };
   return state;
 };
@@ -47,14 +44,15 @@ var turn = function () {
 };
 
 var api = {
-  init: function(leftArm, rightArm, torso, leftLeg, rightLeg, cb) {
-  }
 };
 
 var initRound = function(err, docs) {
   if (!err && docs) {
     var globalState = docs;
-    var roundState;
+    var roundState = {
+      'player1': new player.Player(),
+      'player2': new player.Player()
+    };
   }
 };
 
