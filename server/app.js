@@ -1,9 +1,15 @@
 var express = require('express');
 var app = express();
 var game = require('./game_logic/game.js');
+var bodyParser = requre('body-parser');
 
-
-// We need middleware (body-parser) to make JSON encoded body be readible
+// Middleware to get the request body to be in JSON
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(express.json());
+app.use(express.urlencoded());
 
 app.get('/', function (req, res) {
   res.send('Hello World!');
