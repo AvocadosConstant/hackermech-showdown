@@ -10,12 +10,30 @@ MongoClient.connect(db_url, function(err, db) {
   db.close();
 });
 
-exports.addPlayer = function() {
+function insertDocument(db, callback, id, data) {
+  db.collection(data).insertOne(data, function(err, result) {
+    assert.equal(err, null);
+    console.log("Inserted a document into the restaurants collection.");
+    callback();
+  });
+};
+
+exports.join = function() {
   console.log("addPlayer");
 };
 
-exports.init = function() {
-  console.log("init");
+exports.setup = function() {
+  var state = {
+    'round': 0,
+    'items': ['item1', 'item2', 'item3'],
+    'player1': {
+      'wins': 0
+    },
+    'player2': {
+      'wins': 0
+    }
+  };
+  return state;
 };
 
 exports.run = function(player, code) {
