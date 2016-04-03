@@ -36,11 +36,18 @@ exports.setup = function() {
   return state;
 };
 
-var attack = function() {
+var attack = function(state) {
+    if(!this.actionTaken) {
+        
+    }
+    return state;
 
 }
 
-var defend = function() {
+var defend = function(state) {
+    if(!this.actionTaken) {
+    }
+    return state;
 
 }
 
