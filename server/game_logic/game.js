@@ -1,6 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var jailed = require('jailed');
 var player = require('./Player.js');
 var itemList = require('./itemList.js');
 var debug = require('debug')('mech-fight-server:gamejs');
@@ -40,16 +39,14 @@ exports.setup = function() {
   return state;
 };
 
-var turn = function () {
-};
-
-var api = {
+var turn = function (code) {
 };
 
 var initRound = function(err, docs) {
   if (!err && docs) {
     var globalState = docs;
     var roundState = {
+      'turn': 0,
       'player1': new player.Player(),
       'player2': new player.Player()
     };
@@ -57,6 +54,6 @@ var initRound = function(err, docs) {
 };
 
 exports.run = function() {
-  games.findOne({'type': 'results'}, callback);
+  games.findOne({'type': 'results'}, initRound);
 
 };
