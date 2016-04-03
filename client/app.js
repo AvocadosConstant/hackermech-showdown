@@ -36,11 +36,37 @@ var timer = blessed.bigtext({
     }
 });
 
+var menuBar = blessed.listbar({
+    items: {
+        HELP: 'HELP',
+        PARTS: 'PARTS',
+        TEST1: 'TEST1',
+        TEST2: 'TEST4'
+    },
+    top: 0,
+    left: 0,
+    height: 1,
+    width: '100%',
+    keys: true, 
+    vi: true,
+    mouse: true,
+    autoCommandKeys: true,
+    style: {
+        fg: 'default',
+        bg: 'default',
+        selected: {
+            fg: 'black',
+            bg: 'white',
+            bold: true
+        }
+    }
+});
+
 var info = blessed.box({
     left: 0,
     top: '30%-1',
     width: '30%',
-    height: '70%+1',
+    height: '70%',
     border: 'line',
     style: {
         fg: 'default',
@@ -56,10 +82,10 @@ var info = blessed.box({
 var partsList = blessed.list({
     items: Object.keys(partsJSON),
     left: '0%-1',
-    top: '0%-1',
+    top: '0%+1',
     width: '40%',
-    height: '100%',
-    keys: true,
+    height: '100%-1',
+    keys: true, 
     vi: true,
     mouse: true,
     border: 'line',
@@ -81,10 +107,14 @@ var partsList = blessed.list({
 
 var partPanel = blessed.box({
     left: '40%-2',
-    top: '0%-1',
+    top: '0%+1',
     width: '60%+2',
-    height: '100%',
+    height: '100%-1',
     border: 'line',
+    align: 'center',
+    valign: 'middle',
+    tags: true,
+    content: '{bold}Select a part to read details.{/bold}',
     style: {
         fg: 'default',
         bg: 'default',
@@ -154,11 +184,12 @@ var partDesc = blessed.text({
 });
 
 
-partPanel.append(partPic);
-partPanel.append(partTitle);
-partPanel.append(partDesc);
+//partPanel.append(partPic);
+//partPanel.append(partTitle);
+//partPanel.append(partDesc);
 info.append(partsList);
 info.append(partPanel);
+info.append(menuBar);
 screen.append(timer);
 screen.append(info);
 
@@ -217,6 +248,11 @@ var interval = setInterval(function() {
 cmd.focus();
 
 partsList.on('select', function(el, selected) {
+    partPanel.append(partPic);
+    partPanel.append(partTitle);
+    partPanel.append(partDesc);
+    info.append(partPanel);
+
     var name = el.getText();
     var part = partsJSON[name];
     partTitle.setContent(name);
