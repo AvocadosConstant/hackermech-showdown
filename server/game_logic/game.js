@@ -25,7 +25,7 @@ MongoClient.connect(db_url, (err, database) => {
 var getItems = function (round) {
   var items = itemList();
   for(var i = 0; i<3;i++){
-    delete items[Math.round(Math.random()*(5-i))];
+    delete items[Math.round(Math.random()*(4-i))];
   }
   console.log(items[0].itemId);
   console.log(items);
