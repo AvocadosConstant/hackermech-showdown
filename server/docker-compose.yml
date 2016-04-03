@@ -1,0 +1,12 @@
+Mongo:
+    image: mongo
+    ports:
+        - "27017:27017"
+server:
+    build: .
+    ports:
+        - "3000:3000"
+    links:
+        - Mongo
+    environment:
+        PORT: 3000
