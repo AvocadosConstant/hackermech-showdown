@@ -2,6 +2,7 @@ var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var jailed = require('jailed');
 var player = require('./Player.js');
+var itemList = require('./itemList.js');
 
 var db;
 var games;
@@ -22,6 +23,10 @@ MongoClient.connect(db_url, (err, database) => {
 });
 
 var getItems = function (round) {
+  var items = itemList();
+  for(var i = 0; i<3;i++){
+    delete items[Math.round(Math.random()*(5-i))];
+  }
 };
 
 exports.setup = function() {
