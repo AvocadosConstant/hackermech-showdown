@@ -56,6 +56,7 @@ class Player {
     this.equipMax = 3;
     this.actionTaken = false;
     this.defense = false;
+    this.onAttack = false;
     this.turnDamage = {
       'Left-arm': 0,
       'Right-arm': 0,
@@ -76,7 +77,7 @@ class Player {
     return equipSuccess;
   }
   attack(weapon,target=null){
-    this.actionTaken = true;
+    this.onAttack = true;
     var damage = {
       'Left-arm': 0,
       'Right-arm': 0,
@@ -111,11 +112,13 @@ class Player {
     }
   }
   defense(){
-    this.actionTaken = true;
-    this.defense = true;
+    if(!this.actionTaken&&!this.onAttack){
+      this.actionTaken = true;
+      this.defense = true;
+    }
   }
   restore(mode){
-    if(!this.actionTaken){
+    if(!this.actionTaken&&!this.onAttack){
       if(mode=='power'){
         this.power+=15;
       }
