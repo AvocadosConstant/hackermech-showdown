@@ -1,4 +1,4 @@
-"use struct";
+'use strict';
 
 class Item {
   /**
