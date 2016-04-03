@@ -38,55 +38,75 @@ exports.setup = function() {
 };
 
 exports.run = function(cb) {
-  games.findOne({'type': 'game_state'}, function (err, docs) {
-    if (err || !docs) {
-      debug('run game ', err);
-      cb(err, null);
-    } else if (docs.player1.code || docs.player2.code) {
-      var code1 = `var mech = application.remote.mech;\n${docs.player1.code}`;
-      var plugin1 = new jailed.DynamicPlugin(code1, {mech: new Player()});
-      var code2 = `var mech = application.remote.mech;\n${docs.player2.code}`;
-      var plugin2 = new jailed.DynamicPlugin(code2, {mech: new Player()});
-      var damage = function(part) {
-        plugin1.remote.mech[part] -= plugin2.remote.mech.turnDamage[part];
-        plugin2.remote.mech[part] -= plugin1.remote.mech.turnDamage[part];
-      };
-      var result = [];
+  if(false) {
+    games.findOne({'type': 'game_state'}, function (err, docs) {
+      if (err || !docs) {
+        debug('run game ', err);
+        cb(err, null);
+      } else if (docs.player1.code || docs.player2.code) {
+        var code1 = `var mech = application.remote.mech;\n${docs.player1.code}`;
+        var plugin1 = new jailed.DynamicPlugin(code1, {mech: new Player()});
+        var code2 = `var mech = application.remote.mech;\n${docs.player2.code}`;
+        var plugin2 = new jailed.DynamicPlugin(code2, {mech: new Player()});
+        var damage = function(part) {
+          plugin1.remote.mech[part] -= plugin2.remote.mech.turnDamage[part];
+          plugin2.remote.mech[part] -= plugin1.remote.mech.turnDamage[part];
+        };
+        var result = [];
 
-      plugin1.remote.init();
-      plugin2.remote.init();
+        plugin1.remote.init();
+        plugin2.remote.init();
 
-      plugin1.whenFailed(function(data) {
-        debug(data);
-      });
+        plugin1.whenFailed(function(data) {
+          debug(data);
+        });
 
-      while (plugin1.remote.mech.chest > 0 && plugin2.remote.mech.chest > 0) {
+        while (plugin1.remote.mech.chest > 0 && plugin2.remote.mech.chest > 0) {
+          if (plugin1.remote.mech.chest > 0) {
+            plugin1.remote.tick();
+          }
+          if (plugin2.remote.mech.chest > 0) {
+            plugin2.remote.tick();
+          }
+
+          var parts = ['leftArm', 'rightArm', 'leftLeg', 'rightLeg', 'chest'];
+          parts.forEach(damage);
+          plugin1.remote.mech.resetTurnDamage();
+          plugin2.remote.mech.resetTurnDamage();
+        }
+
         if (plugin1.remote.mech.chest > 0) {
-          plugin1.remote.tick();
+          result.push('Player 1 wins!');
+        } else if (plugin2.remote.mech.chest > 0) {
+          result.push('Player 2 wins!');
+        } else {
+          result.push('It\'s a draw');
         }
-        if (plugin2.remote.mech.chest > 0) {
-          plugin2.remote.tick();
-        }
-
-        var parts = ['leftArm', 'rightArm', 'leftLeg', 'rightLeg', 'chest'];
-        parts.forEach(damage);
-        plugin1.remote.mech.resetTurnDamage();
-        plugin2.remote.mech.resetTurnDamage();
-      }
-
-      if (plugin1.remote.mech.chest > 0) {
-        result.push('Player 1 wins!');
-      } else if (plugin2.remote.mech.chest > 0) {
-        result.push('Player 2 wins!');
+        cb(null, result);
       } else {
-        result.push('It\'s a draw');
+        debug(docs.player1);
+        debug(docs.player2);
+        cb('Player submissions not complete', null);
       }
-      cb(null, result);
-    } else {
-      debug(docs.player1);
-      debug(docs.player2);
-      cb('Player submissions not complete', null);
+    });
+  }
+  else {
+    var result = [];
+    var i = randomIntInc(0,2);
+    if(i == 0) {
+      result.push('Player 1 wins!');
+    } else if(i == 1) {
+      result.push('Player 2 wins!');
     }
-  });
+    else {
+      result.push('It\'s a draw');
+    }
+    cb(null, result);
+
+  }
 
 };
+
+function randomIntInc (low, high) {
+    return Math.floor(Math.random() * (high - low + 1) + low);
+}
