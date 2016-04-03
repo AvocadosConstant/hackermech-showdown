@@ -56,10 +56,11 @@ var interval = setInterval(function() {
     var bigStrings = bigText.growText(text);
     timer.setContent(bigStrings[0] + '\n' +  bigStrings[1] + '\n' +  bigStrings[2]);
     if (time <= 0) {
-        timer.setContent('                                 \n' +
+        /*timer.setContent('                                 \n' +
                          '___    _ _   _     _         _   \n' + 
                          ' |  | | | | |_  / |_    | | |_| |\n' +
                          ' |  | | | | |_     _|   |_| |   .\n');
+        */
         clearInterval(interval);
     }
 }, 1000);
@@ -376,3 +377,6 @@ menuBar.on('click', function(data) {
 partsList.on('click', function(data) {
     partsList.focus();
 });
+
+
+init();
