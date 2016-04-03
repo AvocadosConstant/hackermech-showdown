@@ -1,3 +1,6 @@
+var fs = require('fs');
+var partsJSON = JSON.parse(fs.readFileSync('res/sample-parts.json', 'utf8'));
+
 process.title = 'multiplex.js';
 
 var blessed = require('blessed')
@@ -11,12 +14,16 @@ screen = blessed.screen({
     ignoreDockContrast: true
 });
 
-var timer = blessed.box({
+var timer = blessed.bigtext({
+    align: 'center',
+    valign: 'middle',
+    font: 'fonts/ter-u32n.json',
+    fontBold: 'fonts/ter-u32b.json',
     left: 0,
     top: 0,
     width: '30%',
     height: '30%',
-    content: 'Hello {bold}world{/bold}!',
+    content: '10:00',
     border: 'line',
     style: {
         fg: 'default',
@@ -28,9 +35,8 @@ var timer = blessed.box({
         }
     }
 });
-screen.append(timer);
 
-var parts = blessed.box({
+var info = blessed.box({
     left: 0,
     top: '30%-1',
     width: '30%',
@@ -47,7 +53,114 @@ var parts = blessed.box({
     }
 });
 
-screen.append(parts);
+var partsList = blessed.list({
+    items: Object.keys(partsJSON),
+    left: '0%-1',
+    top: '0%-1',
+    width: '40%',
+    height: '100%',
+    keys: true,
+    vi: true,
+    mouse: true,
+    border: 'line',
+    style: {
+        fg: 'default',
+        bg: 'default',
+        focus: {
+            border: {
+                fg: 'green'
+            }
+        },
+        selected: {
+            fg: 'black',
+            bg: 'white',
+            bold: true
+        }
+    }
+});
+
+var partPanel = blessed.box({
+    left: '40%-2',
+    top: '0%-1',
+    width: '60%+2',
+    height: '100%',
+    border: 'line',
+    style: {
+        fg: 'default',
+        bg: 'default',
+        focus: {
+            border: {
+                fg: 'green'
+            }
+        }
+    }
+});
+
+var partPic = blessed.box({
+    left: 0,
+    top: 0,
+    height: '30%',
+    width: '50%',
+    //file: 'res/rocket-punch.jpg',
+    content: 'Part image goes here',
+    style: {
+        fg: 'default',
+        bg: 'black',
+        focus: {
+            border: {
+                fg: 'green'
+            }
+        }
+    }
+});
+
+var partTitle = blessed.text({
+    align: 'center',
+    valign: 'middle',
+    left: '50%-1',
+    top: '0',
+    height: '30%',
+    width: '50%+1',
+    content: 'Part Title!',
+    style: {
+        fg: 'default',
+        bg: 'default',
+        bold: true,
+        focus: {
+            border: {
+                fg: 'green'
+            }
+        }
+    }
+});
+
+var partDesc = blessed.text({
+    left: 0,
+    top: '30%-1',
+    height: '70%-1',
+    width: '100%',
+    padding: 1,
+    tags: true,
+    content: 'Part description',
+    style: {
+        fg: 'default',
+        bg: 'default',
+        focus: {
+            border: {
+                fg: 'green'
+            }
+        }
+    }
+});
+
+
+partPanel.append(partPic);
+partPanel.append(partTitle);
+partPanel.append(partDesc);
+info.append(partsList);
+info.append(partPanel);
+screen.append(timer);
+screen.append(info);
 
 var cmd = blessed.terminal({
     parent: screen,
@@ -82,37 +195,46 @@ cmd.on('title', function(title) {
 });
 
 
-var iFrequency = 5000; // expressed in miliseconds
-var myInterval = 0;
-
-
-
-/*
-// STARTS and Resets the loop if any
-function startLoop() {
-    if(myInterval > 0) clearInterval(myInterval);  // stop
-    myInterval = setInterval( "doSomething()", iFrequency );  // run
+function str_pad_left(string,pad,length) {
+    return (new Array(length+1).join(pad)+string).slice(-length);
 }
 
-function doSomething()
-{
-    timer.setContent('alan plotko');
-    screen.render();
+function formatTime(time) {
+    var minutes = Math.floor(time/60);
+    var seconds = time % 60;
+    return str_pad_left(minutes,'0',2)+':'+str_pad_left(seconds,'0',2);
 }
-*/
 
-
+var time = 600;
+var interval = setInterval(function() {
+    timer.setContent(formatTime(--time));
+    if (time <= 0) {
+        timer.setContent('Time\'s up!');
+        clearInterval(interval);
+    }
+}, 1000);
 
 cmd.focus();
 
-screen.key('C-b', function() {
-    timer.setContent('alan plotko');
-    screen.render();
+partsList.on('select', function(el, selected) {
+    var name = el.getText();
+    var part = partsJSON[name];
+    partTitle.setContent(name);
+    partDesc.setContent(
+        '{bold}COST{/bold} ' + part.cost + '\n\n' +
+        '{bold}EFFECT{/bold} ' + part.effect + '\n\n' +
+        part.flavor
+    );
 });
 
 screen.key('C-q', function() {
     cmd.kill();
-    return screen.destroy();
+    return process.exit(0);
+});
+
+screen.program.key('S-tab', function() {
+    screen.focusNext();
+    screen.render();
 });
 
 screen.render();
