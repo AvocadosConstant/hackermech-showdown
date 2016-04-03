@@ -9,6 +9,7 @@ class Item {
    * @param {function} action - What the part does.
    */
   constructor(itemId, cost, cooldown, limb, action) {
+    this.itemId = partId;
     this.itemId = itemId;
     this.cost = cost;
     this.cooldown = cooldown;

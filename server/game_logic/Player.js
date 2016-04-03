@@ -18,6 +18,14 @@ class BodyPart {
   }
 
   equip(item) {
+    if(!item.inUse){
+      this.item = item;
+      item.inUse = true;
+      return true;
+    }
+    else{
+      return false;
+    }
     if(item.inUse||item.limb!=this.limbType) return false;
     this.item = item;
     item.inUse = true;
