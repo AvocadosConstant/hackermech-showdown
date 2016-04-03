@@ -1,12 +1,12 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var debug = require('debug')('gpgchat-server:server');
+var debug = require('debug')('mech-fight-server:server');
 var morgan = require('morgan');
 
 var api = require('./routes/index');
 
 var app = express();
-// var game = require('./game_logic/game.js');
+var game = require('./game_logic/game.js');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
