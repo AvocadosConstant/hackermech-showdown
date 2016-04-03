@@ -36,6 +36,30 @@ exports.setup = function() {
   return state;
 };
 
+var attack = function() {
+
+}
+
+var defend = function() {
+
+}
+
+var restore = function(type, state) {
+    if(!this.actionTaken) {
+        if(type == "energy") {
+            state.energy += 20;
+        }
+        {
+           state.leftArm.health += 10; 
+           state.righttArm.health += 10; 
+           state.leftLeg.health += 10; 
+           state.rightLeg.health += 10; 
+           state.torso.health += 10;
+        }
+    }
+    return state;
+}
+
 exports.run = function(player, code) {
   console.log("run");
 };
