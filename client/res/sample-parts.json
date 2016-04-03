@@ -9,5 +9,23 @@
         "cost": "80 pwr",
         "effect": "Punches a specified enemy part for (40-80) damage. Your equipped part takes half the damage you deal.",
         "flavor": "Mechs are equipped with powerful artillery capable of wiping out entire cities. Who cares, let's punch them in the face instead. Rockets included!"
+    },
+
+    "SWORD": {
+      "cost": "20 pwr",
+      "effect": "Launches an aggressive assault on all four limbs with flat damage of 5 and a 50% chance to crit for double damage.",
+      "flavor": "While guns are all the rage, you can't beat a classic."
+    },
+
+    "FLAMETHROWER": {
+      "cost":"40 pwr",
+      "effect": "Engulfs the enemy in fire dealing 10 damage to all limbs and double damage to the chest. Burns for 3-5 seconds after the initial burn for another 3 damage per second.",
+      "flavor": "Sometimes mech owners find it a struggle to aim. This module takes care of that."
+    },
+
+    "RAILGUN": {
+      "cost":"100 pwr",
+      "effect":"Launches an immense spike toward a given part of the body. Deals 50 damage to a limb or 100 to the chest. On limbs, has a 10% chance of shearing a targeted limb off completely.",
+      "flavor":"Many people believe that there is such a thing as too much firepower. Here at Mech inc., we disagree."
     }
 }
