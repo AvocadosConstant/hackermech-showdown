@@ -127,7 +127,7 @@ var info = blessed.box({
     left: 0,
     top: '20%-1',
     width: '30%',
-    height: '80%+1',
+    height: '80%',
     border: 'line',
     style: {
         fg: 'default',
@@ -140,10 +140,10 @@ var helpRoot = blessed.box({
     top: '0%+1',
     left: '0%-1',
     width: '100%',
-    height: '100%',
+    height: '100%-1',
     border: 'line',
     content: 
-        'Welcome to <NAME_OF_GAME>! \n\nThe object of the game is to DESTROY THE ENEMY MECH!\n\nHow do you do so? Well it\'s simple: You write code to program your mech to fight! \n\nAt the beginning of each round, <number> of mech parts are randomly chosen and provided to both players. Each player has ten minutes to write the AI that powers your mech. When time is over, your code is uploaded to the server and run against each other. \n\n<Ctrl-q> to quit'
+        'Welcome to HACKERMECH SHOWDOWN! \n\nThe object of the game is to DESTROY THE ENEMY MECH!\n\nHow do you do so? Well it\'s simple: You write code to program your mech to fight! \n\nAt the beginning of each round, 2 of mech parts are randomly chosen and provided to both players. Each player has ten minutes to write the AI that powers your mech. When time is over, your code is uploaded to the server and run against each other. \n\n<Ctrl-q> to quit'
         ,
     padding: 1,
     style: {
@@ -161,10 +161,10 @@ var creditsRoot = blessed.box({
     top: '0%+1',
     left: '0%-1',
     width: '100%',
-    height: '100%',
+    height: '100%-1',
     border: 'line',
     padding: 1,
-    content: 'Built by Tim Hung, William Jagels, Andrew Chellis, Nik Vanderhoof, Taylor Foxhall, Alan Plotko, and Austin Ward.',
+    content: 'Built by: \n\nTim Hung - Terminal frontend in Node.js with blessed.\nWilliam Jagels - Backend in Node.js\nAndrew Chellis - Game design and backend\nNik Vanderhoof - Game design and backend\nTaylor Foxhall - Backend in Node.js\nAlan Plotko - Terminal frontend with blessed\nAustin Ward - Game design',
     style: {
         fg: 'default',
         bg: 'default',
@@ -234,7 +234,8 @@ submitDir.refresh('/~', function(file){
 
 submitDir.on('file', function(el, selected){
     elapse = 0;
-    console.log(el);
+    //console.log(el);
+    submitInfo.setContent('Submitted ' + el + '!');
     fs.readFile(el, 'utf-8', function(err, data) {
         var options = { method: 'POST',
             url: 'http://localhost:3000/api/submit',
@@ -249,7 +250,7 @@ submitDir.on('file', function(el, selected){
         };
         request(options, function (error, response, body) {
             if (error) throw new Error(error);
-            console.log(body);
+            //console.log(body);
         });
     });
 });
@@ -447,7 +448,7 @@ function init() {
             }
             request(options, function(error, response, body) {
                 body = JSON.parse(body);
-                console.log(body["status"]);
+                //console.log(body["status"]);
                 if(body["status"]) {
                     clearInterval(joinInterval);
                     startGame(); 
