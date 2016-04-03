@@ -1,7 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var jailed = require('jailed');
-var mech = require('Player.js');
+var player = require('./Player.js');
 
 var db;
 var games;
@@ -28,12 +28,8 @@ exports.setup = function() {
   var state = {
     'round': 0,
     'items': ['item1', 'item2', 'item3'],
-    'player1': {
-      'wins': 0
-    },
-    'player2': {
-      'wins': 0
-    }
+    'history': [],
+    'wins': {'player1': 0, 'player2': 0}
   };
   return state;
 };
@@ -42,14 +38,15 @@ var turn = function () {
 };
 
 var api = {
-  init: function(leftArm, rightArm, torso, leftLeg, rightLeg, cb) {
-  }
 };
 
 var initRound = function(err, docs) {
   if (!err && docs) {
     var globalState = docs;
-    var roundState;
+    var roundState = {
+      'player1': new player.Player(),
+      'player2': new player.Player()
+    };
   }
 };
 

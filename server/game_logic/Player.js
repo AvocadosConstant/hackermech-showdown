@@ -1,8 +1,11 @@
+"use strict";
+
 /** Default values. */
 var defaults = {
   'torso': 250,
   'arm': 100,
-  'leg': 100
+  'leg': 100,
+  'power': 100
 };
 
 /** A part of the mech. */
@@ -25,14 +28,23 @@ class BodyPart {
    * @return {boolean} - Success of equipping item.
    */
   equip(item) {
-    if(item.inUse||item.limb!=this.limbType) return false;
-    this.item = item;
-    item.inUse = true;
+    var equipSuccess = true;
+    if(item.inUse || item.limb != this.limbType) {
+      equipSuccess = false;
+    }
+    else {
+      this.item = item;
+      item.inUse = true;
+    }
+    return equipSuccess;
+  }
+
+  use(target) {
   }
 }
 
 /** A user. */
-class Mech {
+class Player() {
   /**
    * Creates a new mech.
    */
@@ -42,6 +54,20 @@ class Mech {
     this.rightArm = new BodyPart('arm');
     this.leftLeg = new BodyPart('leg');
     this.rightLeg = new BodyPart('leg');
+    this.power = defaults.power;
+    this.equipped = 0;
+    this.equipMax = 3;
+  }
+
+  equip(item, bodyPart) {
+    var equipSuccess = true;
+    if (this.equipped >= equipMax) {
+      equipSuccess = false;
+    }
+    else {
+      equipSuccess = bodyPart.equip(item);
+    }
+    return equipSuccess;
   }
 }
 

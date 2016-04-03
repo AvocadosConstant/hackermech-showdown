@@ -1,3 +1,5 @@
+"use struct";
+
 class Item {
   /**
    * Creates a part.
