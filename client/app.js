@@ -251,6 +251,20 @@ submitDir.on('file', function(el, selected){
         request(options, function (error, response, body) {
             if (error) throw new Error(error);
             //console.log(body);
+
+
+
+            var options = { 
+                method: 'GET',
+                url: 'http://localhost:3000/api/results'
+            }
+            request(options, function(error, response, body) {
+                body = JSON.parse(body);
+                var result = body.result;
+
+                timer.setContent(result);
+            });
+        
         });
     });
 });
