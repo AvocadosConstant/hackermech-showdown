@@ -25,16 +25,15 @@ MongoClient.connect(db_url, (err, database) => {
 
 var getItems = function (round) {
   var items = itemList();
-  for (var i = 0; i < 2; i++) {
+  for (var i = 0; i < 3; i++) {
     items.splice(Math.round(Math.random() * (4-i)), 1);
   }
-  debug(items);
 };
 
 exports.setup = function() {
   var state = {
     'round': 0,
-    'items': ['item1', 'item2', 'item3'],
+    'items': getItems(),
     'history': [],
     'wins': {'player1': 0, 'player2': 0}
   };
@@ -61,5 +60,3 @@ exports.run = function() {
   games.findOne({'type': 'results'}, callback);
 
 };
-
-getItems();
