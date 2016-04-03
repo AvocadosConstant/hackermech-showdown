@@ -1,8 +1,10 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 
-var url = 'mongodb://localhost:3000';
-MongoClient.connect(url, function(err, db) {
+var db_url = process.env['MONGO_PORT_27017_TCP'] || 'mongodb://127.0.0.1:27017';
+db_url = db_url.replace('tcp', 'mongodb');
+db_url += '/mech';
+MongoClient.connect(db_url, function(err, db) {
   assert.equal(null, err);
   console.log("Connected correctly to server.");
   db.close();
