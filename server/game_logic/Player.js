@@ -2,8 +2,7 @@
 var defaults = {
   'torso': 250,
   'arm': 100,
-  'leg': 100,
-  'power': 100
+  'leg': 100
 };
 
 /** A part of the mech. */
@@ -31,7 +30,6 @@ class Player {
    */
   constructor (playerId) {
     this.playerId = playerId;
-    this.power = defaults.power;
     this.torso = new BodyPart('torso');
     this.leftArm = new BodyPart('arm');
     this.rightArm = new BodyPart('arm');
