@@ -44,7 +44,7 @@ class BodyPart {
 }
 
 /** A user. */
-class Player() {
+class Player {
   /**
    * Creates a new mech.
    */
