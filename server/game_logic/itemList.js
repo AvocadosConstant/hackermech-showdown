@@ -1,4 +1,4 @@
-var item = require('Item.js');
+var item = require('./Item.js');
 
 var scattergun = function(){
   var bullets = 0;
