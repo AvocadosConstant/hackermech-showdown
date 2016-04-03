@@ -1,13 +1,42 @@
-var BodyPart = require('BodyPart.js');
-var defaults = require('defaults.js');
+/** Default values. */
+var defaults = {
+  'torso': 250,
+  'arm': 100,
+  'leg': 100,
+  'power': 100
+};
 
-/** A player. */
+/** A part of the mech. */
+class BodyPart {
+  /**
+   * Creates body part of a given type.
+   * @param {string} limbType - The type of body part.
+   */
+  constructor(limbType) {
+    this.limbType = limbType;
+    this.health = defaults[limbType];
+    this.item = null;
+  }
+
+  equip(item) {
+    if(!item.inUse){
+      this.item = item;
+      item.inUse = true;
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+}
+
+/** A user. */
 class Player {
   /**
    * Creates a new player.
    * @param {string} playerId - A unique identifier.
    */
-  constructor(playerId) {
+  constructor (playerId) {
     this.playerId = playerId;
     this.power = defaults.power;
     this.torso = new BodyPart('torso');
