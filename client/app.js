@@ -132,9 +132,11 @@ var partPic = blessed.ANSIImage({
     left: '50%-14',
     top: 1,
     scale: 1,
-    width: '100%',
-    height: '40%',
-    file: 'res/images/shroom.png',
+    width: 25,
+    height: 10,
+    //file: 'res/images/shroom.png',
+    file: 'res/images/sword.png',
+    //animate: true,
     //content: 'Part image goes here',
     style: {
         fg: 'default',
@@ -149,7 +151,7 @@ var partPic = blessed.ANSIImage({
 
 var partDesc = blessed.text({
     left: 0,
-    top: '40%-1',
+    top: '35%-1',
     height: '60%-1',
     width: '100%',
     padding: 1,
@@ -167,9 +169,6 @@ var partDesc = blessed.text({
 });
 
 
-//partPanel.append(partPic);
-//partPanel.append(partTitle);
-//partPanel.append(partDesc);
 info.append(partsList);
 info.append(partPanel);
 info.append(menuBar);
@@ -239,6 +238,7 @@ partsList.on('select', function(el, selected) {
 
     var name = el.getText();
     var part = partsJSON[name];
+    partPic.setImage('res/images/' + name + '.png');
     partDesc.setContent(
         '{bold}' + name + '{/bold}' + '\n\n' +
         '{bold}COST{/bold} ' + part.cost + '\n\n' +
