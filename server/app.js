@@ -6,7 +6,7 @@ var morgan = require('morgan');
 var api = require('./routes/index');
 
 var app = express();
-// var game = require('./game_logic/game.js');
+var game = require('./game_logic/game.js');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
