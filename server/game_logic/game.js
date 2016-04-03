@@ -1,8 +1,9 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var player = require('./Player.js');
+var Player = require('./Player.js');
 var itemList = require('./itemList.js');
 var debug = require('debug')('mech-fight-server:gamejs');
+var jailed = require('jailed');
 
 var db;
 var games;
@@ -31,29 +32,50 @@ var getItems = function (round) {
 
 exports.setup = function() {
   var state = {
-    'round': 0,
     'items': getItems(),
-    'history': [],
-    'wins': {'player1': 0, 'player2': 0}
   };
   return state;
 };
 
-var turn = function (code) {
-};
+exports.run = function(cb) {
+  games.findOne({'type': 'results'}, function (err, docs) {
+    if (err || docs) {
+      debug('run game ', err);
+      cb(err, null);
+    } else if (!docs.player1.code && !docs.player2.code) {
+      var code1 = `var mech = application.remote.mech;\n${docs.player1.code}`;
+      var plugin1 = jailed.DynamicPlugin(docs.player1.code, {mech: new Player()});
+      var code2 = `var mech = application.remote.mech;\n${docs.player2.code}`;
+      var plugin2 = jailed.DynamicPlugin(docs.player2.code, {mech: new Player()});
+      var damage = function(part) {
+        plugin1.remote.mech[part] -= plugin2.remote.mech.turnDamage[part];
+        plugin2.remote.mech[part] -= plugin1.remote.mech.turnDamage[part];
+      };
+      var result = [];
 
-var initRound = function(err, docs) {
-  if (!err && docs) {
-    var globalState = docs;
-    var roundState = {
-      'turn': 0,
-      'player1': new player.Player(),
-      'player2': new player.Player()
-    };
-  }
-};
+      plugin1.remote.init();
+      plugin2.remote.init();
 
-exports.run = function() {
-  games.findOne({'type': 'results'}, initRound);
+      while (plugin1.remote.mech.chest > 0 && plugin2.remote.mech.chest > 0) {
+        if (plugin1.remote.mech.chest > 0) {
+          plugin1.remote.tick();
+        }
+        if (plugin2.remote.mech.chest > 0) {
+          plugin2.remote.tick();
+        }
+        var parts = ['leftArm', 'rightArm', 'leftLeg', 'rightLeg', 'chest'];
+        parts.forEach(damage);
+      }
 
+      if (plugin1.remote.mech.chest > 0) {
+        result.push('Player 1 wins!');
+      } else if (plugin2.remote.mech.chest > 0) {
+        result.push('Player 2 wins!');
+      } else {
+        result.push('It\'s a draw');
+      }
+      cb(null, result);
+    }
+  });
+  
 };
