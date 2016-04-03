@@ -26,6 +26,9 @@ class BodyPart {
     else{
       return false;
     }
+    if(item.inUse||item.limb!=this.limbType) return false;
+    this.item = item;
+    item.inUse = true;
   }
 }
 

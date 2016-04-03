@@ -10,6 +10,7 @@ class Item {
    */
   constructor(itemId, cost, cooldown, limb, action) {
     this.itemId = partId;
+    this.itemId = itemId;
     this.cost = cost;
     this.cooldown = cooldown;
     this.limb = limb;
