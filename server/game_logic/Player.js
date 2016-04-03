@@ -19,8 +19,8 @@ class BodyPart {
     this.health = defaults[limbType];
     this.item = null;
   }
-  
-  /** 
+
+  /**
    * Equips item to body part.
    * Returns true if item gets equipped.
    *
@@ -57,6 +57,15 @@ class Player {
     this.power = defaults.power;
     this.equipped = 0;
     this.equipMax = 3;
+    this.actionTaken = false;
+    this.defense = false;
+    this.turnDamage = {
+      'Left-arm': 0,
+      'Right-arm': 0,
+      'Chest': 0,
+      'Left-leg': 0,
+      'Right-leg': 0
+    };
   }
 
   equip(item, bodyPart) {
@@ -68,6 +77,61 @@ class Player {
       equipSuccess = bodyPart.equip(item);
     }
     return equipSuccess;
+  }
+  attack(weapon,target=null){
+    this.actionTaken = true;
+    var damage = {
+      'Left-arm': 0,
+      'Right-arm': 0,
+      'Chest': 0,
+      'Left-leg': 0,
+      'Right-leg': 0
+    };
+    if(weapon==this.rightArm.item.itemID){
+      if(this.power>this.rightArm.item.cost){
+        this.power-=this.rightArm.item.cost;
+        if(target!=null){
+          damage = this.rightArm.item.action(target);
+        }
+        else{
+          damage = this.rightArm.item.action();
+        }
+      }
+    }
+    else if(weapon==this.leftArm.item.itemID){
+      if(this.power>this.leftArm.item.cost){
+        this.power-=this.leftArm.item.cost;
+        if(target!=null){
+          damage = this.leftArm.item.action(target);
+        }
+        else{
+          damage = this.leftArm.item.action();
+        }
+      }
+    }
+    for(var i in damage){
+      turnDamage[i]+=damage[i];
+    }
+  }
+  defense(){
+    this.actionTaken = true;
+    this.defense = true;
+  }
+  restore(mode){
+    if(!actionTaken){
+      if(mode=="power"){
+        this.power+=15;
+      }
+      else if(mode=="repair" && this.power>5){
+        this.power-=5;
+        this.torso.health+=10;
+        this.leftArm.health+=10;
+        this.rightArm.health+=10;
+        this.leftLeg+=10;
+        this.rightLeg+=10;
+      }
+    }
+    this.actionTaken = true;
   }
 }
 
