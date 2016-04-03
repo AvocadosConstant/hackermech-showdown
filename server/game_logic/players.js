@@ -1,22 +1,5 @@
-var defaults = {
-  'torso': 250,
-  'arm': 100,
-  'leg': 100,
-  'power': 100
-};
-
-/** A body part on the mech. */
-class  BodyPart {
-  /**
-   * Creates body part of a given type on the mech.
-   * @constructor
-   * @param {string} type - The type of body part.
-   */
-  constructor(type) {
-    this.type = type;
-    this.health = defaults[type];
-  }
-}
+var BodyPart = require('BodyPart.js');
+var defaults = require('defaults.js');
 
 /** A player. */
 class Player {
@@ -34,3 +17,5 @@ class Player {
     this.rightLeg = new BodyPart('leg');
   }
 }
+
+module.exports = Player;
