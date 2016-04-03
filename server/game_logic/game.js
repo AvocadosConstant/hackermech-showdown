@@ -1,5 +1,4 @@
 var MongoClient = require('mongodb').MongoClient;
-var assert = require('assert');
 var Player = require('./Player.js');
 var itemList = require('./itemList.js');
 var debug = require('debug')('mech-fight-server:gamejs');
@@ -23,30 +22,31 @@ MongoClient.connect(db_url, (err, database) => {
   }
 });
 
-var getItems = function (round) {
+var getItems = function () {
   var items = itemList();
   for (var i = 0; i < 3; i++) {
     items.splice(Math.round(Math.random() * (4-i)), 1);
   }
+  return items;
 };
 
 exports.setup = function() {
   var state = {
-    'items': getItems(),
+    'items': getItems()
   };
   return state;
 };
 
 exports.run = function(cb) {
-  games.findOne({'type': 'results'}, function (err, docs) {
-    if (err || docs) {
+  games.findOne({'type': 'game_state'}, function (err, docs) {
+    if (err || !docs) {
       debug('run game ', err);
       cb(err, null);
-    } else if (!docs.player1.code && !docs.player2.code) {
+    } else if (docs.player1.code || docs.player2.code) {
       var code1 = `var mech = application.remote.mech;\n${docs.player1.code}`;
-      var plugin1 = jailed.DynamicPlugin(docs.player1.code, {mech: new Player()});
+      var plugin1 = new jailed.DynamicPlugin(code1, {mech: new Player()});
       var code2 = `var mech = application.remote.mech;\n${docs.player2.code}`;
-      var plugin2 = jailed.DynamicPlugin(docs.player2.code, {mech: new Player()});
+      var plugin2 = new jailed.DynamicPlugin(code2, {mech: new Player()});
       var damage = function(part) {
         plugin1.remote.mech[part] -= plugin2.remote.mech.turnDamage[part];
         plugin2.remote.mech[part] -= plugin1.remote.mech.turnDamage[part];
@@ -55,6 +55,10 @@ exports.run = function(cb) {
 
       plugin1.remote.init();
       plugin2.remote.init();
+
+      plugin1.whenFailed(function(data) {
+        debug(data);
+      });
 
       while (plugin1.remote.mech.chest > 0 && plugin2.remote.mech.chest > 0) {
         if (plugin1.remote.mech.chest > 0) {
@@ -79,8 +83,10 @@ exports.run = function(cb) {
       }
       cb(null, result);
     } else {
-      cb("Player submissions not complete", null);
+      debug(docs.player1);
+      debug(docs.player2);
+      cb('Player submissions not complete', null);
     }
   });
-  
+
 };

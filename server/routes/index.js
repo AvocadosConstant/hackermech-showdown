@@ -101,7 +101,19 @@ router.post('/submit', function(req, res) {
       if(err) {
         res.status(500).send(err);
       } else {
-        res.send({'status': 'okay'});
+        games.findOne({'type': 'game_state'}, function(err, docs) {
+          if(docs.player1 && docs.player2 && docs.player1.code && docs.player2.code) {
+            game.run(function(err, result) {
+              if(err) {
+                res.status(500).send(err);
+              } else {
+                res.send({'status': 'okay', 'result': result});
+              }
+            });
+          } else {
+            res.send({'status': 'okay'});
+          }
+        });
       }
     });
   } else if(req.body.player == 2) {
@@ -109,7 +121,19 @@ router.post('/submit', function(req, res) {
       if(err) {
         res.status(500).send(err);
       } else {
-        res.send({'status': 'okay'});
+        games.findOne({'type': 'game_state'}, function(err, docs) {
+          if(docs.player1 && docs.player2 && docs.player1.code && docs.player2.code) {
+            game.run(function(err, result) {
+              if(err) {
+                res.status(500).send(err);
+              } else {
+                res.send({'status': 'okay', 'result': result});
+              }
+            });
+          } else {
+            res.send({'status': 'okay'});
+          }
+        });
       }
     });
   } else {

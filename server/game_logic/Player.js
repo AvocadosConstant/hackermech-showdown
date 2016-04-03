@@ -67,6 +67,7 @@ class Player {
   }
 
   resetTurnDamage() {
+    this.power += 5;
     this.turnDamage.leftArm = 0;
     this.turnDamage.rightArm = 0;
     this.turnDamage.chest = 0;
