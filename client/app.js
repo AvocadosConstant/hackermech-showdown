@@ -11,9 +11,11 @@ screen = blessed.screen({
     ignoreDockContrast: true
 });
 
-var timer = blessed.box({
+var timer = blessed.bigtext({
     align: 'center',
     valign: 'middle',
+    font: 'fonts/ter-u32n.json',
+    fontBold: 'fonts/ter-u32b.json',
     left: 0,
     top: 0,
     width: '30%',
@@ -211,7 +213,7 @@ cmd.focus();
 
 screen.key('C-q', function() {
     cmd.kill();
-    return screen.destroy();
+    return process.exit(0);
 });
 
 screen.program.key('S-tab', function() {
