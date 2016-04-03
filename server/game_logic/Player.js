@@ -76,7 +76,7 @@ class Player {
     }
     return equipSuccess;
   }
-  attack(weapon,target=null){
+  attack(weapon,target){
     this.onAttack = true;
     var damage = {
       'Left-arm': 0,
