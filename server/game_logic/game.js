@@ -63,8 +63,11 @@ exports.run = function(cb) {
         if (plugin2.remote.mech.chest > 0) {
           plugin2.remote.tick();
         }
+
         var parts = ['leftArm', 'rightArm', 'leftLeg', 'rightLeg', 'chest'];
         parts.forEach(damage);
+        plugin1.remote.mech.resetTurnDamage();
+        plugin2.remote.mech.resetTurnDamage();
       }
 
       if (plugin1.remote.mech.chest > 0) {
@@ -75,6 +78,8 @@ exports.run = function(cb) {
         result.push('It\'s a draw');
       }
       cb(null, result);
+    } else {
+      cb("Player submissions not complete", null);
     }
   });
   
