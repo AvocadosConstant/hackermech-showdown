@@ -15,6 +15,7 @@ class Part {
     this.limb = limb;
     this.cooling = 0;
     this.action = action;
+    this.inUse = false;
   }
 }
 

@@ -19,7 +19,14 @@ class BodyPart {
   }
 
   equip(item) {
-    this.item = item;
+    if(!item.inUse){
+      this.item = item;
+      item.inUse = true;
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 }
 
