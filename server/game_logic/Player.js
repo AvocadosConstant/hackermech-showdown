@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /** Default values. */
 var defaults = {
@@ -38,9 +38,6 @@ class BodyPart {
     }
     return equipSuccess;
   }
-
-  use(target) {
-  }
 }
 
 /** A user. */
@@ -70,7 +67,7 @@ class Player {
 
   equip(item, bodyPart) {
     var equipSuccess = true;
-    if (this.equipped >= equipMax) {
+    if (this.equipped >= this.equipMax) {
       equipSuccess = false;
     }
     else {
@@ -110,7 +107,7 @@ class Player {
       }
     }
     for(var i in damage){
-      turnDamage[i]+=damage[i];
+      this.turnDamage[i]+=damage[i];
     }
   }
   defense(){
@@ -118,11 +115,11 @@ class Player {
     this.defense = true;
   }
   restore(mode){
-    if(!actionTaken){
-      if(mode=="power"){
+    if(!this.actionTaken){
+      if(mode=='power'){
         this.power+=15;
       }
-      else if(mode=="repair" && this.power>5){
+      else if(mode=='repair' && this.power>5){
         this.power-=5;
         this.torso.health+=10;
         this.leftArm.health+=10;
