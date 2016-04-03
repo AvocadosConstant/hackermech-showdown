@@ -1,4 +1,4 @@
-class Part {
+class Item {
   /**
    * Creates a part.
    * @constructor
@@ -8,8 +8,8 @@ class Part {
    * @param {string} limb - Where the part can be equipped.
    * @param {function} action - What the part does.
    */
-  constructor(partId, cost, cooldown, limb, action) {
-    this.partId = partId;
+  constructor(itemId, cost, cooldown, limb, action) {
+    this.itemId = partId;
     this.cost = cost;
     this.cooldown = cooldown;
     this.limb = limb;
