@@ -88,3 +88,4 @@ function itemList(){
   listItems.push(new item("Railgun",80,2,"arm",railgun));
 }
 
+module.exports = itemList;
