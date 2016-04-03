@@ -52,7 +52,7 @@ router.get('/setup', function(req, res) {
       debug('get /setup ', err);
       res.status(500).send(err);
     } else if(!docs) {
-      var initial = game.init();
+      var initial = game.setup();
       initial.type = 'game_state';
       initial.participants = 1;
       games.insertOne(initial, function(err, docs) {
@@ -95,7 +95,26 @@ router.get('/clear', function(req, res) {
 
 router.post('/submit', function(req, res) {
   debug(req.body);
-  res.send({});
+  var code = req.body.code;
+  if(req.body.player == 1) {
+    games.updateOne({'type': 'game_state'}, {$set: {player1: {code: code}}}, function(err) {
+      if(err) {
+        res.status(500).send(err);
+      } else {
+        res.send({'status': 'okay'});
+      }
+    });
+  } else if(req.body.player == 2) {
+    games.updateOne({'type': 'game_state'}, {$set: {player2: {code: code}}}, function(err) {
+      if(err) {
+        res.status(500).send(err);
+      } else {
+        res.send({'status': 'okay'});
+      }
+    });
+  } else {
+    res.status(400).send({'status': 'invalid_player'});
+  }
 });
 
 module.exports = router;
