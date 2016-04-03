@@ -87,6 +87,7 @@ function itemList(){
   listItems.push(new item('Sword',20,1,'arm',sword));
   listItems.push(new item('Flamethrower',45,1,'arm',flamethrower));
   listItems.push(new item('Railgun',80,2,'arm',railgun));
+  return listItems;
 }
 
 module.exports = itemList;
