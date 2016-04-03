@@ -26,6 +26,7 @@
   "dependencies": {
     "blessed": "^0.1.81",
     "pty.js": "^0.3.0",
+    "request": "^2.69.0",
     "term.js": "0.0.7"
   }
 }

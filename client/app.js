@@ -1,5 +1,6 @@
 var blessed = require('blessed'), screen;
 var bigText = require('./bigText.js');
+var request = require("request");
 
 //  Sample data for testing
 var fs = require('fs');
@@ -77,6 +78,7 @@ var menuBar = blessed.listbar({
     items: {
         HELP: 'HELP',
         PARTS: 'PARTS',
+        SUBMIT: 'SUBMIT',
         CREDITS: 'CREDITS'
     },
     top: 0,
@@ -103,8 +105,14 @@ var menuBar = blessed.listbar({
 menuBar.on('select', function(el, selected) {
     menuBar.focus();
     var name = el.getText().substring(2);
+
+    info.remove(helpRoot);
+    info.remove(partsRoot);
+    info.remove(submitRoot);
+    info.remove(creditsRoot);
     if(name === 'HELP') info.append(helpRoot);
     else if(name === 'PARTS') info.append(partsRoot);
+    else if(name === 'SUBMIT') info.append(submitRoot);
     else if(name === 'CREDITS') info.append(creditsRoot);
     info.append(menuBar);
 });
@@ -167,6 +175,85 @@ var creditsRoot = blessed.box({
         }
     }
 });
+
+var submitRoot = blessed.box({
+    scrollable: true,
+    top: '0%+1',
+    left: '0%-1',
+    width: '100%',
+    height: '100% - 1',
+    border: 'line',
+    padding: 1,
+    tags: true,
+    content: '{bold}Select your file for upload. Good luck!{/bold}',
+    style: {
+        fg: 'default',
+        bg: 'default',
+        focus: {
+            border: {
+                fg: 'green'
+            }
+        }
+    }
+});
+
+var submitDir = blessed.filemanager({
+    cwd: true,
+    scrollable: true,
+    top: '0%+2',
+    left: '0%-1',
+    width: '100%',
+    height: '100% - 10',
+    keys: true, 
+    vi: true,
+    mouse: true,
+    border: 'line',
+    padding: 1,
+    style: {
+        fg: 'default',
+        bg: 'default',
+        focus: {
+            border: {
+                fg: 'green'
+            }
+        },
+        selected: {
+            fg: 'black',
+            bg: 'white',
+            bold: true
+        }
+    }
+});
+
+submitDir.refresh('/~', function(file){
+});
+
+submitDir.on('file', function(el, selected){
+    console.log(el);
+    fs.readFile(el, 'utf-8', function(err, data) {
+        var options = { method: 'POST',
+            url: 'http://localhost:3000/api/submit',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: { 
+                player: corpus.player, 
+                code: data
+            },
+            json: true 
+        };
+        request(options, function (error, response, body) {
+            if (error) throw new Error(error);
+            console.log(body);
+        });
+    });
+});
+
+submitRoot.append(submitDir);
+
+
+
+
 
 //--------------------------//
 //      Parts Section       //
@@ -322,6 +409,7 @@ cmd.on('title', function(title) {
 //--------------------------//
 //      Game Funcs          //
 //--------------------------//
+var corpus;
 function init() {
     partsRoot.append(partsList);
     partsRoot.append(partPanel);
@@ -336,8 +424,29 @@ function init() {
     screen.render();
     cmd.focus();
 
-    //  This is called after both users join
-    //startGame();
+
+    //  Trigger setup
+    var options = { 
+        method: 'GET',
+        url: 'http://localhost:3000/api/setup'
+    }
+    request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+        corpus = body;
+
+        var joinInterval = setInterval(function() {
+            var options = { 
+                method: 'GET',
+                url: 'http://localhost:3000/api/join'
+            }
+            request(options, function(error, response, body) {
+                if(body.status) {
+                    clearInterval(joinInterval);
+                    startGame(); 
+                }
+            });
+        }, 500);
+    });
 }
 
 function startGame() {
@@ -346,6 +455,7 @@ function startGame() {
 }
 
 
+init();
 
 
 //--------------------------//
@@ -379,4 +489,3 @@ partsList.on('click', function(data) {
 });
 
 
-init();
