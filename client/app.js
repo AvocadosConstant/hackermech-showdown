@@ -1,3 +1,4 @@
+var bigText = require('./bigText.js');
 var fs = require('fs');
 var partsJSON = JSON.parse(fs.readFileSync('res/sample-parts.json', 'utf8'));
 
@@ -14,20 +15,22 @@ screen = blessed.screen({
     ignoreDockContrast: true
 });
 
-var timer = blessed.bigtext({
+var timer = blessed.box({
     align: 'center',
     valign: 'middle',
-    font: 'fonts/ter-u32n.json',
-    fontBold: 'fonts/ter-u32b.json',
-    left: 0,
-    top: 0,
-    width: '30%',
-    height: '30%',
-    content: '10:00',
+    left: '0%-1',
+    top: '0%-1',
+    width: '30%+1',
+    height: '20%+1',
     border: 'line',
+    content:    '            \n' +
+                '     _       _   _  \n' +
+                '  | | |  .  | | | | \n' +
+                '  | |_|  .  |_| |_| \n',
     style: {
-        fg: 'default',
-        bg: 'default',
+        fg: 'green',
+        bg: 'gray',
+        bold: true,
         focus: {
             border: {
                 fg: 'green'
@@ -55,27 +58,25 @@ var menuBar = blessed.listbar({
         fg: 'default',
         bg: 'default',
         selected: {
-            fg: 'black',
-            bg: 'white',
+            fg: 'white',
+            bg: 'gray',
             bold: true
+        },
+        item: {
+            bg: 'default'
         }
     }
 });
 
 var info = blessed.box({
     left: 0,
-    top: '30%-1',
+    top: '20%-1',
     width: '30%',
-    height: '70%',
+    height: '80%+1',
     border: 'line',
     style: {
         fg: 'default',
         bg: 'default',
-        focus: {
-            border: {
-                fg: 'green'
-            }
-        }
     }
 });
 
@@ -129,8 +130,8 @@ var partPanel = blessed.box({
 var partPic = blessed.box({
     left: 0,
     top: 0,
-    height: '30%',
-    width: '50%',
+    height: '40%',
+    width: '100%',
     //file: 'res/rocket-punch.jpg',
     content: 'Part image goes here',
     style: {
@@ -144,30 +145,10 @@ var partPic = blessed.box({
     }
 });
 
-var partTitle = blessed.text({
-    align: 'center',
-    valign: 'middle',
-    left: '50%-1',
-    top: '0',
-    height: '30%',
-    width: '50%+1',
-    content: 'Part Title!',
-    style: {
-        fg: 'default',
-        bg: 'default',
-        bold: true,
-        focus: {
-            border: {
-                fg: 'green'
-            }
-        }
-    }
-});
-
 var partDesc = blessed.text({
     left: 0,
-    top: '30%-1',
-    height: '70%-1',
+    top: '40%-1',
+    height: '60%-1',
     width: '100%',
     padding: 1,
     tags: true,
@@ -190,8 +171,8 @@ var partDesc = blessed.text({
 info.append(partsList);
 info.append(partPanel);
 info.append(menuBar);
-screen.append(timer);
 screen.append(info);
+screen.append(timer);
 
 var cmd = blessed.terminal({
     parent: screen,
@@ -238,7 +219,9 @@ function formatTime(time) {
 
 var time = 600;
 var interval = setInterval(function() {
-    timer.setContent(formatTime(--time));
+    var text = formatTime(--time);
+    var bigStrings = bigText.growText(text);
+    timer.setContent(bigStrings[0] + '\n' +  bigStrings[1] + '\n' +  bigStrings[2]);
     if (time <= 0) {
         timer.setContent('Time\'s up!');
         clearInterval(interval);
@@ -249,14 +232,13 @@ cmd.focus();
 
 partsList.on('select', function(el, selected) {
     partPanel.append(partPic);
-    partPanel.append(partTitle);
     partPanel.append(partDesc);
     info.append(partPanel);
 
     var name = el.getText();
     var part = partsJSON[name];
-    partTitle.setContent(name);
     partDesc.setContent(
+        '{bold}' + name + '{/bold}' + '\n\n' +
         '{bold}COST{/bold} ' + part.cost + '\n\n' +
         '{bold}EFFECT{/bold} ' + part.effect + '\n\n' +
         part.flavor
