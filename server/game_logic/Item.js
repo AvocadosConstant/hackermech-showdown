@@ -19,4 +19,4 @@ class Item {
   }
 }
 
-module.exports = Part;
+module.exports = Item;
