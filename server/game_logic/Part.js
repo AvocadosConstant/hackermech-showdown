@@ -7,7 +7,7 @@
  * @param {string} limb - Where the part can be equipped.
  * @param {function} action - What the part does.
  */
-exports.Part = function(partId, cost, cooldown, limb, action) {
+module.exports = function(partId, cost, cooldown, limb, action) {
   this.partId = partId;
   this.cost = cost;
   this.cooldown = cooldown;
