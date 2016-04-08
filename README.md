@@ -6,6 +6,7 @@
 HACKERMECH SHOWDOWN is a 1v1 in terminal game where the goal of the game is to defeat your opponent's mech in an epic fight to send them back to the scrapyard. 
 
 Each round, a few mech parts are selected out of a global pool of parts and made available to you. Your own mech is powered by your own strategical ingenuity and coding skills: You have ten minutes to write the JavaScript code that controls the actions of your mech.
+
 ![screenshot2](http://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/369/951/datas/gallery.jpg)
 ***
 ## Build
@@ -15,3 +16,5 @@ Our back-end is powered by--you guessed it: Node.js, along with express.js, dock
 ***
 ## Credits
 This project was built in less than 24 hours at the [hackNY 13](https://github.com/chjj/blessed) hackathon at NYU.
+
+Check out our [devpost](http://devpost.com/software/hackermech-showdown) page!
