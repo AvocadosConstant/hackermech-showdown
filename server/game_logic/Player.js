@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /** Default values. */
 var defaults = {
@@ -19,8 +19,8 @@ class BodyPart {
     this.health = defaults[limbType];
     this.item = null;
   }
-  
-  /** 
+
+  /**
    * Equips item to body part.
    * Returns true if item gets equipped.
    *
@@ -38,9 +38,6 @@ class BodyPart {
     }
     return equipSuccess;
   }
-
-  use(target) {
-  }
 }
 
 /** A user. */
@@ -57,17 +54,93 @@ class Player {
     this.power = defaults.power;
     this.equipped = 0;
     this.equipMax = 3;
+    this.actionTaken = false;
+    this.defense = false;
+    this.onAttack = false;
+    this.turnDamage = {
+      'leftArm': 0,
+      'rightArm': 0,
+      'chest': 0,
+      'leftLeg': 0,
+      'rightLeg': 0
+    };
+  }
+
+  resetTurnDamage() {
+    this.power += 5;
+    this.turnDamage.leftArm = 0;
+    this.turnDamage.rightArm = 0;
+    this.turnDamage.chest = 0;
+    this.turnDamage.leftLeg = 0;
+    this.turnDamage.rightLeg = 0;
   }
 
   equip(item, bodyPart) {
     var equipSuccess = true;
-    if (this.equipped >= equipMax) {
+    if (this.equipped >= this.equipMax) {
       equipSuccess = false;
     }
     else {
       equipSuccess = bodyPart.equip(item);
     }
     return equipSuccess;
+  }
+  attack(weapon,target){
+    this.onAttack = true;
+    var damage = {
+      'leftArm': 0,
+      'rightArm': 0,
+      'chest': 0,
+      'leftLeg': 0,
+      'rightLeg': 0
+    };
+    if(weapon==this.rightArm.item.itemID){
+      if(this.power>this.rightArm.item.cost){
+        this.power-=this.rightArm.item.cost;
+        if(target!=null){
+          damage = this.rightArm.item.action(target);
+        }
+        else{
+          damage = this.rightArm.item.action();
+        }
+      }
+    }
+    else if(weapon==this.leftArm.item.itemID){
+      if(this.power>this.leftArm.item.cost){
+        this.power-=this.leftArm.item.cost;
+        if(target!=null){
+          damage = this.leftArm.item.action(target);
+        }
+        else{
+          damage = this.leftArm.item.action();
+        }
+      }
+    }
+    for(var i in damage){
+      this.turnDamage[i]+=damage[i];
+    }
+  }
+  defense(){
+    if(!this.actionTaken&&!this.onAttack){
+      this.actionTaken = true;
+      this.defense = true;
+    }
+  }
+  restore(mode){
+    if(!this.actionTaken&&!this.onAttack){
+      if(mode=='power'){
+        this.power+=15;
+      }
+      else if(mode=='repair' && this.power>5){
+        this.power-=5;
+        this.torso.health+=10;
+        this.leftArm.health+=10;
+        this.rightArm.health+=10;
+        this.leftLeg+=10;
+        this.rightLeg+=10;
+      }
+    }
+    this.actionTaken = true;
   }
 }
 
